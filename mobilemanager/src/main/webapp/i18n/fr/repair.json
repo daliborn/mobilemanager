@@ -1,0 +1,26 @@
+{
+    "mobilemanagerApp": {
+        "repair" : {
+            "home": {
+                "title": "Repairs",
+                "createLabel": "Créer un nouveau Repair",
+                "createOrEditLabel": "Créer ou éditer un Repair"
+            },
+            "delete": {
+                "question": "Etes-vous certain de vouloir supprimer le Repair {{ id }} ?"
+            },
+            "detail": {
+                "title": "Repair"
+            },
+            "imei": "Imei",
+            "serialno": "Serialno",
+            "brand": "Brand",
+            "entryDate": "EntryDate",
+            "closed": "Closed",
+            "comment": "Comment",
+            "price": "Price",
+            "client": "Client"
+        }
+    }
+}
+

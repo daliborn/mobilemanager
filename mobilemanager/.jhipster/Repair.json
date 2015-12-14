@@ -1,0 +1,58 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "client",
+            "otherEntityName": "client",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "imei",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "serialno",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "brand",
+            "fieldType": "Brand",
+            "fieldValues": "Acer,Alcatel,Allview,Anycool,Apple,Asus,BenQ,Blackberry,BLU,Cat,Coolpad,Dell,Garmin_Asus,General_Mobile,Gigabyte,Goclever,GT,HP,HTC,Huawei,i_mate,Intex,Karbonn,Lenovo,LG,Martin_Dawes,Meizu,Microsoft,Mitsubishi,Motorola,MyWigo,Nec,Nokia,OnePlus,Oppo,Palm,Panasonic,Pantech,Philips,Prestigio,Privileg,Qtek,Runbo,Sagem,Samsung,Sharp,Siemens,Sonim,Sony,Sony_Ericsson,Tecmobile,Telital,Tesla,Toshiba,Utok,Vertu,Viewsonic,Vivax,VK_Mobile,Xiaomi,Zopo,ZTE"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "entryDate",
+            "fieldType": "DateTime"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "closed",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 6,
+            "fieldName": "comment",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 7,
+            "fieldName": "price",
+            "fieldType": "BigDecimal"
+        }
+    ],
+    "changelogDate": "20151114111339",
+    "dto": "mapstruct",
+    "pagination": "infinite-scroll"
+}

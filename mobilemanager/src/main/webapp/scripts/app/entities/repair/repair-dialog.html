@@ -1,0 +1,147 @@
+
+<form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myRepairLabel" translate="mobilemanagerApp.repair.home.createOrEditLabel">Create or edit a Repair</h4>
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="repair.id" readonly>
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.imei" for="field_imei">Imei</label>
+            <input type="text" class="form-control" name="imei" id="field_imei"
+                    ng-model="repair.imei"
+                    required>
+            <div ng-show="editForm.imei.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.imei.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.serialno" for="field_serialno">Serialno</label>
+            <input type="text" class="form-control" name="serialno" id="field_serialno"
+                    ng-model="repair.serialno"
+                    required>
+            <div ng-show="editForm.serialno.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.serialno.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.brand" for="field_brand">Brand</label>
+            <select class="form-control" name="brand" ng-model="repair.brand" id="field_brand">
+                <option value="Acer" translate="mobilemanagerApp.Brand.Acer">Acer</option>
+                <option value="Alcatel" translate="mobilemanagerApp.Brand.Alcatel">Alcatel</option>
+                <option value="Allview" translate="mobilemanagerApp.Brand.Allview">Allview</option>
+                <option value="Anycool" translate="mobilemanagerApp.Brand.Anycool">Anycool</option>
+                <option value="Apple" translate="mobilemanagerApp.Brand.Apple">Apple</option>
+                <option value="Asus" translate="mobilemanagerApp.Brand.Asus">Asus</option>
+                <option value="BenQ" translate="mobilemanagerApp.Brand.BenQ">BenQ</option>
+                <option value="Blackberry" translate="mobilemanagerApp.Brand.Blackberry">Blackberry</option>
+                <option value="BLU" translate="mobilemanagerApp.Brand.BLU">BLU</option>
+                <option value="Cat" translate="mobilemanagerApp.Brand.Cat">Cat</option>
+                <option value="Coolpad" translate="mobilemanagerApp.Brand.Coolpad">Coolpad</option>
+                <option value="Dell" translate="mobilemanagerApp.Brand.Dell">Dell</option>
+                <option value="Garmin_Asus" translate="mobilemanagerApp.Brand.Garmin_Asus">Garmin_Asus</option>
+                <option value="General_Mobile" translate="mobilemanagerApp.Brand.General_Mobile">General_Mobile</option>
+                <option value="Gigabyte" translate="mobilemanagerApp.Brand.Gigabyte">Gigabyte</option>
+                <option value="Goclever" translate="mobilemanagerApp.Brand.Goclever">Goclever</option>
+                <option value="GT" translate="mobilemanagerApp.Brand.GT">GT</option>
+                <option value="HP" translate="mobilemanagerApp.Brand.HP">HP</option>
+                <option value="HTC" translate="mobilemanagerApp.Brand.HTC">HTC</option>
+                <option value="Huawei" translate="mobilemanagerApp.Brand.Huawei">Huawei</option>
+                <option value="i_mate" translate="mobilemanagerApp.Brand.i_mate">i_mate</option>
+                <option value="Intex" translate="mobilemanagerApp.Brand.Intex">Intex</option>
+                <option value="Karbonn" translate="mobilemanagerApp.Brand.Karbonn">Karbonn</option>
+                <option value="Lenovo" translate="mobilemanagerApp.Brand.Lenovo">Lenovo</option>
+                <option value="LG" translate="mobilemanagerApp.Brand.LG">LG</option>
+                <option value="Martin_Dawes" translate="mobilemanagerApp.Brand.Martin_Dawes">Martin_Dawes</option>
+                <option value="Meizu" translate="mobilemanagerApp.Brand.Meizu">Meizu</option>
+                <option value="Microsoft" translate="mobilemanagerApp.Brand.Microsoft">Microsoft</option>
+                <option value="Mitsubishi" translate="mobilemanagerApp.Brand.Mitsubishi">Mitsubishi</option>
+                <option value="Motorola" translate="mobilemanagerApp.Brand.Motorola">Motorola</option>
+                <option value="MyWigo" translate="mobilemanagerApp.Brand.MyWigo">MyWigo</option>
+                <option value="Nec" translate="mobilemanagerApp.Brand.Nec">Nec</option>
+                <option value="Nokia" translate="mobilemanagerApp.Brand.Nokia">Nokia</option>
+                <option value="OnePlus" translate="mobilemanagerApp.Brand.OnePlus">OnePlus</option>
+                <option value="Oppo" translate="mobilemanagerApp.Brand.Oppo">Oppo</option>
+                <option value="Palm" translate="mobilemanagerApp.Brand.Palm">Palm</option>
+                <option value="Panasonic" translate="mobilemanagerApp.Brand.Panasonic">Panasonic</option>
+                <option value="Pantech" translate="mobilemanagerApp.Brand.Pantech">Pantech</option>
+                <option value="Philips" translate="mobilemanagerApp.Brand.Philips">Philips</option>
+                <option value="Prestigio" translate="mobilemanagerApp.Brand.Prestigio">Prestigio</option>
+                <option value="Privileg" translate="mobilemanagerApp.Brand.Privileg">Privileg</option>
+                <option value="Qtek" translate="mobilemanagerApp.Brand.Qtek">Qtek</option>
+                <option value="Runbo" translate="mobilemanagerApp.Brand.Runbo">Runbo</option>
+                <option value="Sagem" translate="mobilemanagerApp.Brand.Sagem">Sagem</option>
+                <option value="Samsung" translate="mobilemanagerApp.Brand.Samsung">Samsung</option>
+                <option value="Sharp" translate="mobilemanagerApp.Brand.Sharp">Sharp</option>
+                <option value="Siemens" translate="mobilemanagerApp.Brand.Siemens">Siemens</option>
+                <option value="Sonim" translate="mobilemanagerApp.Brand.Sonim">Sonim</option>
+                <option value="Sony" translate="mobilemanagerApp.Brand.Sony">Sony</option>
+                <option value="Sony_Ericsson" translate="mobilemanagerApp.Brand.Sony_Ericsson">Sony_Ericsson</option>
+                <option value="Tecmobile" translate="mobilemanagerApp.Brand.Tecmobile">Tecmobile</option>
+                <option value="Telital" translate="mobilemanagerApp.Brand.Telital">Telital</option>
+                <option value="Tesla" translate="mobilemanagerApp.Brand.Tesla">Tesla</option>
+                <option value="Toshiba" translate="mobilemanagerApp.Brand.Toshiba">Toshiba</option>
+                <option value="Utok" translate="mobilemanagerApp.Brand.Utok">Utok</option>
+                <option value="Vertu" translate="mobilemanagerApp.Brand.Vertu">Vertu</option>
+                <option value="Viewsonic" translate="mobilemanagerApp.Brand.Viewsonic">Viewsonic</option>
+                <option value="Vivax" translate="mobilemanagerApp.Brand.Vivax">Vivax</option>
+                <option value="VK_Mobile" translate="mobilemanagerApp.Brand.VK_Mobile">VK_Mobile</option>
+                <option value="Xiaomi" translate="mobilemanagerApp.Brand.Xiaomi">Xiaomi</option>
+                <option value="Zopo" translate="mobilemanagerApp.Brand.Zopo">Zopo</option>
+                <option value="ZTE" translate="mobilemanagerApp.Brand.ZTE">ZTE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.entryDate" for="field_entryDate">EntryDate</label>
+            <input type="datetime-local" class="form-control" name="entryDate" id="field_entryDate"
+                    ng-model="repair.entryDate" ng-model-options="{timezone: 'UTC'}"
+                    >
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.closed" for="field_closed">Closed</label>
+            <input type="checkbox" class="form-control" name="closed" id="field_closed"
+                    ng-model="repair.closed"
+                    >
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.comment" for="field_comment">Comment</label>
+            <input type="text" class="form-control" name="comment" id="field_comment"
+                    ng-model="repair.comment"
+                    >
+        </div>
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.price" for="field_price">Price</label>
+            <input type="number" class="form-control" name="price" id="field_price"
+                    ng-model="repair.price"
+                    >
+        </div>
+
+        <div class="form-group">
+            <label translate="mobilemanagerApp.repair.client" for="field_client">client</label>
+            <select class="form-control" id="field_client" name="client" ng-model="repair.clientId" ng-options="client.id as client.id for client in clients">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

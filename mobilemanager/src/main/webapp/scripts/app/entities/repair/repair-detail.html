@@ -1,0 +1,86 @@
+
+<div>
+    <h2><span translate="mobilemanagerApp.repair.detail.title">Repair</span> {{repair.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th translate="entity.detail.field">Field</th>
+                <th translate="entity.detail.value">Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.imei">Imei</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.imei}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.serialno">Serialno</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.serialno}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.brand">Brand</span>
+                </td>
+                <td>
+                    <span class="form-control-static" translate="{{'mobilemanagerApp.Brand.' + repair.brand}}">{{repair.brand}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.entryDate">EntryDate</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.entryDate}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.closed">Closed</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.closed}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.comment">Comment</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.comment}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.price">Price</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{repair.price}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span translate="mobilemanagerApp.repair.client">client</span>
+                </td>
+                <td>
+                    <a class="form-control-static" ui-sref="client.detail({id:repair.clientId})">{{repair.clientId}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>
