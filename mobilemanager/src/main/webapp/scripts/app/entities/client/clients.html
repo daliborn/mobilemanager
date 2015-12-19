@@ -49,7 +49,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th translate="global.field.id">ID</th>
                     <th translate="mobilemanagerApp.client.name">Name</th>
                     <th translate="mobilemanagerApp.client.contactPhone">ContactPhone</th>
                     <th></th>
@@ -57,7 +56,6 @@
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="client in clients">
-                    <td><a ui-sref="client.detail({id:client.id})">{{client.id}}</a></td>
                     <td>{{client.name}}</td>
                     <td>{{client.contactPhone}}</td>
                     <td>

@@ -49,7 +49,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th translate="global.field.id">ID</th>
                     <th translate="mobilemanagerApp.repair.imei">Imei</th>
                     <th translate="mobilemanagerApp.repair.serialno">Serialno</th>
                     <th translate="mobilemanagerApp.repair.brand">Brand</th>
@@ -63,7 +62,6 @@
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
                 <tr ng-repeat="repair in repairs">
-                    <td><a ui-sref="repair.detail({id:repair.id})">{{repair.id}}</a></td>
                     <td>{{repair.imei}}</td>
                     <td>{{repair.serialno}}</td>
                     <td translate="{{'mobilemanagerApp.Brand.' + repair.brand}}">{{repair.brand}}</td>
@@ -72,7 +70,7 @@
                     <td>{{repair.comment}}</td>
                     <td>{{repair.price}}</td>
                     <td>
-                        <a ui-sref="client.detail({id:repair.clientId})">{{repair.clientId}}</a>
+                        <a ui-sref="client.detail({id:repair.clientId})">{{repair.clientName}}</a>
                     </td>
                     <td>
                         <button type="submit"
