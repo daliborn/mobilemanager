@@ -21,6 +21,21 @@
             "fieldId": 2,
             "fieldName": "contactPhone",
             "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "email",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "note",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "address",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20151104212046",

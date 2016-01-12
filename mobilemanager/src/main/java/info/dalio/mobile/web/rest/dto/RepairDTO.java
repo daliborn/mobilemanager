@@ -35,8 +35,6 @@ public class RepairDTO implements Serializable {
 
     private Long clientId;
 
-    private String clientName;
-
     public Long getId() {
         return id;
     }
@@ -142,13 +140,5 @@ public class RepairDTO implements Serializable {
                 ", comment='" + comment + "'" +
                 ", price='" + price + "'" +
                 '}';
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
     }
 }

@@ -1,6 +1,7 @@
 package info.dalio.mobile.web.rest.mapper;
 
 import info.dalio.mobile.domain.*;
+import info.dalio.mobile.repository.ClientRepository;
 import info.dalio.mobile.repository.UserRepository;
 import info.dalio.mobile.web.rest.dto.RepairDTO;
 
@@ -15,20 +16,18 @@ import javax.inject.Inject;
 public abstract class RepairMapper {
 
     @Inject
-    private UserRepository userRepository;
+    private ClientRepository userRepository;
 
-    @Mapping(source = "client.name", target = "clientName")
+    @Mapping(source = "client.id", target = "clientId")
     public abstract RepairDTO repairToRepairDTO(Repair repair);
 
-    @Mapping(source = "clientName", target = "client")
+    @Mapping(source = "clientId", target = "client")
     public abstract Repair repairDTOToRepair(RepairDTO repairDTO);
 
     public Client clientFromId(Long id) {
         if (id == null) {
             return null;
         }
-        Client client = new Client();
-        client.setId(id);
-        return client;
+        return userRepository.findOne(id);
     }
 }
