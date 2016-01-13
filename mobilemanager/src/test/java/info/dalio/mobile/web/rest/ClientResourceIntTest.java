@@ -42,12 +42,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest
-public class ClientResourceTest {
+public class ClientResourceIntTest {
 
-    private static final String DEFAULT_NAME = "SAMPLE_TEXT";
-    private static final String UPDATED_NAME = "UPDATED_TEXT";
-    private static final String DEFAULT_CONTACT_PHONE = "SAMPLE_TEXT";
-    private static final String UPDATED_CONTACT_PHONE = "UPDATED_TEXT";
+    private static final String DEFAULT_NAME = "AAAAA";
+    private static final String UPDATED_NAME = "BBBBB";
+    private static final String DEFAULT_CONTACT_PHONE = "AAAAA";
+    private static final String UPDATED_CONTACT_PHONE = "BBBBB";
+    private static final String DEFAULT_EMAIL = "AAAAA";
+    private static final String UPDATED_EMAIL = "BBBBB";
+    private static final String DEFAULT_NOTE = "AAAAA";
+    private static final String UPDATED_NOTE = "BBBBB";
+    private static final String DEFAULT_ADDRESS = "AAAAA";
+    private static final String UPDATED_ADDRESS = "BBBBB";
 
     @Inject
     private ClientRepository clientRepository;
@@ -72,9 +78,9 @@ public class ClientResourceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         ClientResource clientResource = new ClientResource();
+        ReflectionTestUtils.setField(clientResource, "clientSearchRepository", clientSearchRepository);
         ReflectionTestUtils.setField(clientResource, "clientRepository", clientRepository);
         ReflectionTestUtils.setField(clientResource, "clientMapper", clientMapper);
-        ReflectionTestUtils.setField(clientResource, "clientSearchRepository", clientSearchRepository);
         this.restClientMockMvc = MockMvcBuilders.standaloneSetup(clientResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -85,6 +91,9 @@ public class ClientResourceTest {
         client = new Client();
         client.setName(DEFAULT_NAME);
         client.setContactPhone(DEFAULT_CONTACT_PHONE);
+        client.setEmail(DEFAULT_EMAIL);
+        client.setNote(DEFAULT_NOTE);
+        client.setAddress(DEFAULT_ADDRESS);
     }
 
     @Test
@@ -106,6 +115,9 @@ public class ClientResourceTest {
         Client testClient = clients.get(clients.size() - 1);
         assertThat(testClient.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testClient.getContactPhone()).isEqualTo(DEFAULT_CONTACT_PHONE);
+        assertThat(testClient.getEmail()).isEqualTo(DEFAULT_EMAIL);
+        assertThat(testClient.getNote()).isEqualTo(DEFAULT_NOTE);
+        assertThat(testClient.getAddress()).isEqualTo(DEFAULT_ADDRESS);
     }
 
     @Test
@@ -134,12 +146,15 @@ public class ClientResourceTest {
         clientRepository.saveAndFlush(client);
 
         // Get all the clients
-        restClientMockMvc.perform(get("/api/clients"))
+        restClientMockMvc.perform(get("/api/clients?sort=id,desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(client.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].contactPhone").value(hasItem(DEFAULT_CONTACT_PHONE.toString())));
+                .andExpect(jsonPath("$.[*].contactPhone").value(hasItem(DEFAULT_CONTACT_PHONE.toString())))
+                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())))
+                .andExpect(jsonPath("$.[*].note").value(hasItem(DEFAULT_NOTE.toString())))
+                .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())));
     }
 
     @Test
@@ -154,7 +169,10 @@ public class ClientResourceTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(client.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.contactPhone").value(DEFAULT_CONTACT_PHONE.toString()));
+            .andExpect(jsonPath("$.contactPhone").value(DEFAULT_CONTACT_PHONE.toString()))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()))
+            .andExpect(jsonPath("$.note").value(DEFAULT_NOTE.toString()))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()));
     }
 
     @Test
@@ -176,7 +194,9 @@ public class ClientResourceTest {
         // Update the client
         client.setName(UPDATED_NAME);
         client.setContactPhone(UPDATED_CONTACT_PHONE);
-        
+        client.setEmail(UPDATED_EMAIL);
+        client.setNote(UPDATED_NOTE);
+        client.setAddress(UPDATED_ADDRESS);
         ClientDTO clientDTO = clientMapper.clientToClientDTO(client);
 
         restClientMockMvc.perform(put("/api/clients")
@@ -190,6 +210,9 @@ public class ClientResourceTest {
         Client testClient = clients.get(clients.size() - 1);
         assertThat(testClient.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testClient.getContactPhone()).isEqualTo(UPDATED_CONTACT_PHONE);
+        assertThat(testClient.getEmail()).isEqualTo(UPDATED_EMAIL);
+        assertThat(testClient.getNote()).isEqualTo(UPDATED_NOTE);
+        assertThat(testClient.getAddress()).isEqualTo(UPDATED_ADDRESS);
     }
 
     @Test

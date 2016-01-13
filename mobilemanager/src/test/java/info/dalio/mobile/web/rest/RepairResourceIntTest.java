@@ -26,10 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -48,26 +48,27 @@ import info.dalio.mobile.domain.enumeration.Brand;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest
-public class RepairResourceTest {
+public class RepairResourceIntTest {
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneId.of("Z"));
 
-    private static final String DEFAULT_IMEI = "SAMPLE_TEXT";
-    private static final String UPDATED_IMEI = "UPDATED_TEXT";
-    private static final String DEFAULT_SERIALNO = "SAMPLE_TEXT";
-    private static final String UPDATED_SERIALNO = "UPDATED_TEXT";
+    private static final String DEFAULT_IMEI = "AAAAA";
+    private static final String UPDATED_IMEI = "BBBBB";
+    private static final String DEFAULT_SERIALNO = "AAAAA";
+    private static final String UPDATED_SERIALNO = "BBBBB";
+
 
     private static final Brand DEFAULT_BRAND = Brand.Acer;
     private static final Brand UPDATED_BRAND = Brand.Alcatel;
 
-    private static final DateTime DEFAULT_ENTRY_DATE = new DateTime(0L, DateTimeZone.UTC);
-    private static final DateTime UPDATED_ENTRY_DATE = new DateTime(DateTimeZone.UTC).withMillisOfSecond(0);
-    private static final String DEFAULT_ENTRY_DATE_STR = dateTimeFormatter.print(DEFAULT_ENTRY_DATE);
+    private static final ZonedDateTime DEFAULT_ENTRY_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_ENTRY_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final String DEFAULT_ENTRY_DATE_STR = dateTimeFormatter.format(DEFAULT_ENTRY_DATE);
 
     private static final Boolean DEFAULT_CLOSED = false;
     private static final Boolean UPDATED_CLOSED = true;
-    private static final String DEFAULT_COMMENT = "SAMPLE_TEXT";
-    private static final String UPDATED_COMMENT = "UPDATED_TEXT";
+    private static final String DEFAULT_COMMENT = "AAAAA";
+    private static final String UPDATED_COMMENT = "BBBBB";
 
     private static final BigDecimal DEFAULT_PRICE = new BigDecimal(1);
     private static final BigDecimal UPDATED_PRICE = new BigDecimal(2);
@@ -95,9 +96,9 @@ public class RepairResourceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         RepairResource repairResource = new RepairResource();
+        ReflectionTestUtils.setField(repairResource, "repairSearchRepository", repairSearchRepository);
         ReflectionTestUtils.setField(repairResource, "repairRepository", repairRepository);
         ReflectionTestUtils.setField(repairResource, "repairMapper", repairMapper);
-        ReflectionTestUtils.setField(repairResource, "repairSearchRepository", repairSearchRepository);
         this.restRepairMockMvc = MockMvcBuilders.standaloneSetup(repairResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -135,7 +136,7 @@ public class RepairResourceTest {
         assertThat(testRepair.getImei()).isEqualTo(DEFAULT_IMEI);
         assertThat(testRepair.getSerialno()).isEqualTo(DEFAULT_SERIALNO);
         assertThat(testRepair.getBrand()).isEqualTo(DEFAULT_BRAND);
-        assertThat(testRepair.getEntryDate().toDateTime(DateTimeZone.UTC)).isEqualTo(DEFAULT_ENTRY_DATE);
+        assertThat(testRepair.getEntryDate()).isEqualTo(DEFAULT_ENTRY_DATE);
         assertThat(testRepair.getClosed()).isEqualTo(DEFAULT_CLOSED);
         assertThat(testRepair.getComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testRepair.getPrice()).isEqualTo(DEFAULT_PRICE);
@@ -186,7 +187,7 @@ public class RepairResourceTest {
         repairRepository.saveAndFlush(repair);
 
         // Get all the repairs
-        restRepairMockMvc.perform(get("/api/repairs"))
+        restRepairMockMvc.perform(get("/api/repairs?sort=id,desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(repair.getId().intValue())))
@@ -243,7 +244,6 @@ public class RepairResourceTest {
         repair.setClosed(UPDATED_CLOSED);
         repair.setComment(UPDATED_COMMENT);
         repair.setPrice(UPDATED_PRICE);
-        
         RepairDTO repairDTO = repairMapper.repairToRepairDTO(repair);
 
         restRepairMockMvc.perform(put("/api/repairs")
@@ -258,7 +258,7 @@ public class RepairResourceTest {
         assertThat(testRepair.getImei()).isEqualTo(UPDATED_IMEI);
         assertThat(testRepair.getSerialno()).isEqualTo(UPDATED_SERIALNO);
         assertThat(testRepair.getBrand()).isEqualTo(UPDATED_BRAND);
-        assertThat(testRepair.getEntryDate().toDateTime(DateTimeZone.UTC)).isEqualTo(UPDATED_ENTRY_DATE);
+        assertThat(testRepair.getEntryDate()).isEqualTo(UPDATED_ENTRY_DATE);
         assertThat(testRepair.getClosed()).isEqualTo(UPDATED_CLOSED);
         assertThat(testRepair.getComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testRepair.getPrice()).isEqualTo(UPDATED_PRICE);
