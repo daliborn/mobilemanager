@@ -1,6 +1,7 @@
 package info.dalio.mobile.repository;
 
 import info.dalio.mobile.domain.Authority;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

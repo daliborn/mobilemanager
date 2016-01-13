@@ -6,6 +6,9 @@
                 "createLabel": "Créer un nouveau Repair",
                 "createOrEditLabel": "Créer ou éditer un Repair"
             },
+            "created": "Un nouveau Repair a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Repair avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Repair avec l'identifiant {{ param }} a été supprimé",
             "delete": {
                 "question": "Etes-vous certain de vouloir supprimer le Repair {{ id }} ?"
             },

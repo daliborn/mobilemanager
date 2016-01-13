@@ -4,11 +4,9 @@ import info.dalio.mobile.security.AjaxLogoutSuccessHandler;
 import info.dalio.mobile.security.AuthoritiesConstants;
 import info.dalio.mobile.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,9 +16,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -49,7 +48,6 @@ public class OAuth2ServerConfiguration {
                 .logoutSuccessHandler(ajaxLogoutSuccessHandler)
             .and()
                 .csrf()
-                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
                 .disable()
                 .headers()
                 .frameOptions().disable()
@@ -58,6 +56,7 @@ public class OAuth2ServerConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/logs/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
@@ -73,6 +72,7 @@ public class OAuth2ServerConfiguration {
                 .antMatchers("/autoconfig/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/env/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/trace/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                .antMatchers("/liquibase/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/protected/**").authenticated();
 
@@ -81,17 +81,13 @@ public class OAuth2ServerConfiguration {
 
     @Configuration
     @EnableAuthorizationServer
-    protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter implements EnvironmentAware {
-
-        private static final String ENV_OAUTH = "authentication.oauth.";
-        private static final String PROP_CLIENTID = "clientid";
-        private static final String PROP_SECRET = "secret";
-        private static final String PROP_TOKEN_VALIDITY_SECONDS = "tokenValidityInSeconds";
-
-        private RelaxedPropertyResolver propertyResolver;
+    protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
         @Inject
         private DataSource dataSource;
+
+        @Inject
+        private JHipsterProperties jHipsterProperties;
 
         @Bean
         public TokenStore tokenStore() {
@@ -112,20 +108,20 @@ public class OAuth2ServerConfiguration {
         }
 
         @Override
-        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            clients
-                .inMemory()
-                .withClient(propertyResolver.getProperty(PROP_CLIENTID))
-                .scopes("read", "write")
-                .authorities(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
-                .authorizedGrantTypes("password", "refresh_token")
-                .secret(propertyResolver.getProperty(PROP_SECRET))
-                .accessTokenValiditySeconds(propertyResolver.getProperty(PROP_TOKEN_VALIDITY_SECONDS, Integer.class, 1800));
+        public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+            oauthServer.allowFormAuthenticationForClients();
         }
 
         @Override
-        public void setEnvironment(Environment environment) {
-            this.propertyResolver = new RelaxedPropertyResolver(environment, ENV_OAUTH);
+        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+            clients
+                .inMemory()
+                .withClient(jHipsterProperties.getSecurity().getAuthentication().getOauth().getClientid())
+                .scopes("read", "write")
+                .authorities(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
+                .authorizedGrantTypes("password", "refresh_token", "authorization_code", "implicit")
+                .secret(jHipsterProperties.getSecurity().getAuthentication().getOauth().getSecret())
+                .accessTokenValiditySeconds(jHipsterProperties.getSecurity().getAuthentication().getOauth().getTokenValidityInSeconds());
         }
     }
 }

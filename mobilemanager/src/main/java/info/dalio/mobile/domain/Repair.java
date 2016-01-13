@@ -1,13 +1,8 @@
 package info.dalio.mobile.domain;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import info.dalio.mobile.domain.util.CustomDateTimeDeserializer;
-import info.dalio.mobile.domain.util.CustomDateTimeSerializer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
@@ -24,43 +19,41 @@ import info.dalio.mobile.domain.enumeration.Brand;
  * A Repair.
  */
 @Entity
-@Table(name = "REPAIR")
+@Table(name = "repair")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName="repair")
+@Document(indexName = "repair")
 public class Repair implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull        
+    @NotNull
     @Column(name = "imei", nullable = false)
     private String imei;
 
-    @NotNull        
+    @NotNull
     @Column(name = "serialno", nullable = false)
     private String serialno;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "brand")
     private Brand brand;
-    
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(name = "entry_date", nullable = false)
-    private DateTime entryDate;
-    
+
+    @Column(name = "entry_date")
+    private ZonedDateTime entryDate;
+
     @Column(name = "closed")
     private Boolean closed;
-    
+
     @Column(name = "comment")
     private String comment;
-    
-    @Column(name = "price", precision=10, scale=2, nullable = false)
+
+    @Column(name = "price", precision=10, scale=2)
     private BigDecimal price;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
 
     public Long getId() {
@@ -95,11 +88,11 @@ public class Repair implements Serializable {
         this.brand = brand;
     }
 
-    public DateTime getEntryDate() {
+    public ZonedDateTime getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(DateTime entryDate) {
+    public void setEntryDate(ZonedDateTime entryDate) {
         this.entryDate = entryDate;
     }
 
@@ -143,12 +136,8 @@ public class Repair implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Repair repair = (Repair) o;
-
-        if ( ! Objects.equals(id, repair.id)) return false;
-
-        return true;
+        return Objects.equals(id, repair.id);
     }
 
     @Override
@@ -159,14 +148,14 @@ public class Repair implements Serializable {
     @Override
     public String toString() {
         return "Repair{" +
-                "id=" + id +
-                ", imei='" + imei + "'" +
-                ", serialno='" + serialno + "'" +
-                ", brand='" + brand + "'" +
-                ", entryDate='" + entryDate + "'" +
-                ", closed='" + closed + "'" +
-                ", comment='" + comment + "'" +
-                ", price='" + price + "'" +
-                '}';
+            "id=" + id +
+            ", imei='" + imei + "'" +
+            ", serialno='" + serialno + "'" +
+            ", brand='" + brand + "'" +
+            ", entryDate='" + entryDate + "'" +
+            ", closed='" + closed + "'" +
+            ", comment='" + comment + "'" +
+            ", price='" + price + "'" +
+            '}';
     }
 }

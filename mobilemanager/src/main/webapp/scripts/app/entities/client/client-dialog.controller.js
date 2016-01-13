@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('mobilemanagerApp').controller('ClientDialogController',
-    ['$scope', '$stateParams', '$modalInstance', 'entity', 'Client', 'Repair',
-        function($scope, $stateParams, $modalInstance, entity, Client, Repair) {
+    ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'Client', 'Repair',
+        function($scope, $stateParams, $uibModalInstance, entity, Client, Repair) {
 
         $scope.client = entity;
         $scope.repairs = Repair.query();
@@ -12,20 +12,26 @@ angular.module('mobilemanagerApp').controller('ClientDialogController',
             });
         };
 
-        var onSaveFinished = function (result) {
+        var onSaveSuccess = function (result) {
             $scope.$emit('mobilemanagerApp:clientUpdate', result);
-            $modalInstance.close(result);
+            $uibModalInstance.close(result);
+            $scope.isSaving = false;
+        };
+
+        var onSaveError = function (result) {
+            $scope.isSaving = false;
         };
 
         $scope.save = function () {
+            $scope.isSaving = true;
             if ($scope.client.id != null) {
-                Client.update($scope.client, onSaveFinished);
+                Client.update($scope.client, onSaveSuccess, onSaveError);
             } else {
-                Client.save($scope.client, onSaveFinished);
+                Client.save($scope.client, onSaveSuccess, onSaveError);
             }
         };
 
         $scope.clear = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
 }]);

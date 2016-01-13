@@ -39,34 +39,35 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ClientResource {
 
     private final Logger log = LoggerFactory.getLogger(ClientResource.class);
-
+        
     @Inject
     private ClientRepository clientRepository;
-
+    
     @Inject
     private ClientMapper clientMapper;
-
+    
     @Inject
     private ClientSearchRepository clientSearchRepository;
-
+    
     /**
      * POST  /clients -> Create a new client.
      */
     @RequestMapping(value = "/clients",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to save Client : {}", clientDTO);
         if (clientDTO.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new client cannot already have an ID").body(null);
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("client", "idexists", "A new client cannot already have an ID")).body(null);
         }
         Client client = clientMapper.clientDTOToClient(clientDTO);
-        Client result = clientRepository.save(client);
-        clientSearchRepository.save(result);
+        client = clientRepository.save(client);
+        ClientDTO result = clientMapper.clientToClientDTO(client);
+        clientSearchRepository.save(client);
         return ResponseEntity.created(new URI("/api/clients/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("client", result.getId().toString()))
-                .body(clientMapper.clientToClientDTO(result));
+            .headers(HeaderUtil.createEntityCreationAlert("client", result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -82,24 +83,26 @@ public class ClientResource {
             return createClient(clientDTO);
         }
         Client client = clientMapper.clientDTOToClient(clientDTO);
-        Client result = clientRepository.save(client);
+        client = clientRepository.save(client);
+        ClientDTO result = clientMapper.clientToClientDTO(client);
         clientSearchRepository.save(client);
         return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert("client", clientDTO.getId().toString()))
-                .body(clientMapper.clientToClientDTO(result));
+            .headers(HeaderUtil.createEntityUpdateAlert("client", clientDTO.getId().toString()))
+            .body(result);
     }
 
     /**
      * GET  /clients -> get all the clients.
      */
     @RequestMapping(value = "/clients",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Transactional(readOnly = true)
     public ResponseEntity<List<ClientDTO>> getAllClients(Pageable pageable)
         throws URISyntaxException {
-        Page<Client> page = clientRepository.findAll(pageable);
+        log.debug("REST request to get a page of Clients");
+        Page<Client> page = clientRepository.findAll(pageable); 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/clients");
         return new ResponseEntity<>(page.getContent().stream()
             .map(clientMapper::clientToClientDTO)
@@ -110,15 +113,16 @@ public class ClientResource {
      * GET  /clients/:id -> get the "id" client.
      */
     @RequestMapping(value = "/clients/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
         log.debug("REST request to get Client : {}", id);
-        return Optional.ofNullable(clientRepository.findOne(id))
-            .map(clientMapper::clientToClientDTO)
-            .map(clientDTO -> new ResponseEntity<>(
-                clientDTO,
+        Client client = clientRepository.findOne(id);
+        ClientDTO clientDTO = clientMapper.clientToClientDTO(client);
+        return Optional.ofNullable(clientDTO)
+            .map(result -> new ResponseEntity<>(
+                result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -127,8 +131,8 @@ public class ClientResource {
      * DELETE  /clients/:id -> delete the "id" client.
      */
     @RequestMapping(value = "/clients/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         log.debug("REST request to delete Client : {}", id);
@@ -145,9 +149,11 @@ public class ClientResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Client> searchClients(@PathVariable String query) {
+    public List<ClientDTO> searchClients(@PathVariable String query) {
+        log.debug("REST request to search Clients for query {}", query);
         return StreamSupport
-            .stream(clientSearchRepository.search(queryString(query)).spliterator(), false)
+            .stream(clientSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+            .map(clientMapper::clientToClientDTO)
             .collect(Collectors.toList());
     }
 }

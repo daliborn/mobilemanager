@@ -36,4 +36,4 @@
     <cache name="info.dalio.mobile.domain.User.persistentTokens"
            timeToLiveSeconds="3600">
     </cache>
-</ehcache>
+    </ehcache>

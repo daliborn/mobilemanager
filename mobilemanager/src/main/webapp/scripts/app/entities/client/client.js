@@ -53,14 +53,21 @@ angular.module('mobilemanagerApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
+                onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                    $uibModal.open({
                         templateUrl: 'scripts/app/entities/client/client-dialog.html',
                         controller: 'ClientDialogController',
                         size: 'lg',
                         resolve: {
                             entity: function () {
-                                return {name: null, contactPhone: null, id: null};
+                                return {
+                                    name: null,
+                                    contactPhone: null,
+                                    email: null,
+                                    note: null,
+                                    address: null,
+                                    id: null
+                                };
                             }
                         }
                     }).result.then(function(result) {
@@ -76,11 +83,34 @@ angular.module('mobilemanagerApp')
                 data: {
                     authorities: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
+                onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                    $uibModal.open({
                         templateUrl: 'scripts/app/entities/client/client-dialog.html',
                         controller: 'ClientDialogController',
                         size: 'lg',
+                        resolve: {
+                            entity: ['Client', function(Client) {
+                                return Client.get({id : $stateParams.id});
+                            }]
+                        }
+                    }).result.then(function(result) {
+                        $state.go('client', null, { reload: true });
+                    }, function() {
+                        $state.go('^');
+                    })
+                }]
+            })
+            .state('client.delete', {
+                parent: 'client',
+                url: '/{id}/delete',
+                data: {
+                    authorities: ['ROLE_USER'],
+                },
+                onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'scripts/app/entities/client/client-delete-dialog.html',
+                        controller: 'ClientDeleteController',
+                        size: 'md',
                         resolve: {
                             entity: ['Client', function(Client) {
                                 return Client.get({id : $stateParams.id});

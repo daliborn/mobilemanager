@@ -6,6 +6,9 @@
                 "createLabel": "Créer un nouveau Client",
                 "createOrEditLabel": "Créer ou éditer un Client"
             },
+            "created": "Un nouveau Client a été créé avec l'identifiant {{ param }}",
+            "updated": "Le Client avec l'identifiant {{ param }} a été mis à jour",
+            "deleted": "Le Client avec l'identifiant {{ param }} a été supprimé",
             "delete": {
                 "question": "Etes-vous certain de vouloir supprimer le Client {{ id }} ?"
             },
@@ -14,6 +17,9 @@
             },
             "name": "Name",
             "contactPhone": "ContactPhone",
+            "email": "Email",
+            "note": "Note",
+            "address": "Address",
             "repair": "Repair"
         }
     }

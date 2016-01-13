@@ -9,6 +9,6 @@ angular.module('mobilemanagerApp')
                     AlertService.success(alertKey, { param : response.headers('X-mobilemanagerApp-params')});
                 }
                 return response;
-            },
+            }
         };
     });

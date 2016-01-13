@@ -39,34 +39,35 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class RepairResource {
 
     private final Logger log = LoggerFactory.getLogger(RepairResource.class);
-
+        
     @Inject
     private RepairRepository repairRepository;
-
+    
     @Inject
     private RepairMapper repairMapper;
-
+    
     @Inject
     private RepairSearchRepository repairSearchRepository;
-
+    
     /**
      * POST  /repairs -> Create a new repair.
      */
     @RequestMapping(value = "/repairs",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<RepairDTO> createRepair(@Valid @RequestBody RepairDTO repairDTO) throws URISyntaxException {
         log.debug("REST request to save Repair : {}", repairDTO);
         if (repairDTO.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new repair cannot already have an ID").body(null);
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("repair", "idexists", "A new repair cannot already have an ID")).body(null);
         }
         Repair repair = repairMapper.repairDTOToRepair(repairDTO);
-        Repair result = repairRepository.save(repair);
-        repairSearchRepository.save(result);
+        repair = repairRepository.save(repair);
+        RepairDTO result = repairMapper.repairToRepairDTO(repair);
+        repairSearchRepository.save(repair);
         return ResponseEntity.created(new URI("/api/repairs/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("repair", result.getId().toString()))
-                .body(repairMapper.repairToRepairDTO(result));
+            .headers(HeaderUtil.createEntityCreationAlert("repair", result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -82,24 +83,26 @@ public class RepairResource {
             return createRepair(repairDTO);
         }
         Repair repair = repairMapper.repairDTOToRepair(repairDTO);
-        Repair result = repairRepository.save(repair);
+        repair = repairRepository.save(repair);
+        RepairDTO result = repairMapper.repairToRepairDTO(repair);
         repairSearchRepository.save(repair);
         return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert("repair", repairDTO.getId().toString()))
-                .body(repairMapper.repairToRepairDTO(result));
+            .headers(HeaderUtil.createEntityUpdateAlert("repair", repairDTO.getId().toString()))
+            .body(result);
     }
 
     /**
      * GET  /repairs -> get all the repairs.
      */
     @RequestMapping(value = "/repairs",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Transactional(readOnly = true)
     public ResponseEntity<List<RepairDTO>> getAllRepairs(Pageable pageable)
         throws URISyntaxException {
-        Page<Repair> page = repairRepository.findAll(pageable);
+        log.debug("REST request to get a page of Repairs");
+        Page<Repair> page = repairRepository.findAll(pageable); 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/repairs");
         return new ResponseEntity<>(page.getContent().stream()
             .map(repairMapper::repairToRepairDTO)
@@ -110,15 +113,16 @@ public class RepairResource {
      * GET  /repairs/:id -> get the "id" repair.
      */
     @RequestMapping(value = "/repairs/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<RepairDTO> getRepair(@PathVariable Long id) {
         log.debug("REST request to get Repair : {}", id);
-        return Optional.ofNullable(repairRepository.findOne(id))
-            .map(repairMapper::repairToRepairDTO)
-            .map(repairDTO -> new ResponseEntity<>(
-                repairDTO,
+        Repair repair = repairRepository.findOne(id);
+        RepairDTO repairDTO = repairMapper.repairToRepairDTO(repair);
+        return Optional.ofNullable(repairDTO)
+            .map(result -> new ResponseEntity<>(
+                result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -127,8 +131,8 @@ public class RepairResource {
      * DELETE  /repairs/:id -> delete the "id" repair.
      */
     @RequestMapping(value = "/repairs/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Void> deleteRepair(@PathVariable Long id) {
         log.debug("REST request to delete Repair : {}", id);
@@ -145,9 +149,11 @@ public class RepairResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Repair> searchRepairs(@PathVariable String query) {
+    public List<RepairDTO> searchRepairs(@PathVariable String query) {
+        log.debug("REST request to search Repairs for query {}", query);
         return StreamSupport
-            .stream(repairSearchRepository.search(queryString(query)).spliterator(), false)
+            .stream(repairSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+            .map(repairMapper::repairToRepairDTO)
             .collect(Collectors.toList());
     }
 }

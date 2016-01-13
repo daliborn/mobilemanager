@@ -8,7 +8,9 @@ angular.module('mobilemanagerApp')
                 $scope.repair = result;
             });
         };
-        $rootScope.$on('mobilemanagerApp:repairUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('mobilemanagerApp:repairUpdate', function(event, result) {
             $scope.repair = result;
         });
+        $scope.$on('$destroy', unsubscribe);
+
     });

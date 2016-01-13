@@ -1,11 +1,14 @@
 'use strict';
 
 angular.module('mobilemanagerApp')
-    .controller('RepairController', function ($scope, Repair, RepairSearch, ParseLinks) {
+    .controller('RepairController', function ($scope, $state, Repair, RepairSearch, ParseLinks) {
+
         $scope.repairs = [];
+        $scope.predicate = 'id';
+        $scope.reverse = true;
         $scope.page = 0;
         $scope.loadAll = function() {
-            Repair.query({page: $scope.page, size: 20}, function(result, headers) {
+            Repair.query({page: $scope.page, size: 20, sort: [$scope.predicate + ',' + ($scope.reverse ? 'asc' : 'desc'), 'id']}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 for (var i = 0; i < result.length; i++) {
                     $scope.repairs.push(result[i]);
@@ -23,21 +26,6 @@ angular.module('mobilemanagerApp')
         };
         $scope.loadAll();
 
-        $scope.delete = function (id) {
-            Repair.get({id: id}, function(result) {
-                $scope.repair = result;
-                $('#deleteRepairConfirmation').modal('show');
-            });
-        };
-
-        $scope.confirmDelete = function (id) {
-            Repair.delete({id: id},
-                function () {
-                    $scope.reset();
-                    $('#deleteRepairConfirmation').modal('hide');
-                    $scope.clear();
-                });
-        };
 
         $scope.search = function () {
             RepairSearch.query({query: $scope.searchQuery}, function(result) {
@@ -55,6 +43,15 @@ angular.module('mobilemanagerApp')
         };
 
         $scope.clear = function () {
-            $scope.repair = {imei: null, serialno: null, brand: null, entryDate: null, closed: null, comment: null, price: null, id: null};
+            $scope.repair = {
+                imei: null,
+                serialno: null,
+                brand: null,
+                entryDate: null,
+                closed: null,
+                comment: null,
+                price: null,
+                id: null
+            };
         };
     });

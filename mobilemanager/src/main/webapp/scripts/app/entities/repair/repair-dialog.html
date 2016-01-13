@@ -11,13 +11,13 @@
         <div class="form-group">
             <label for="id" translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
-                    ng-model="repair.id" readonly>
+                    ng-model="repair.id" readonly />
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.imei" for="field_imei">Imei</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.imei" for="field_imei">Imei</label>
             <input type="text" class="form-control" name="imei" id="field_imei"
                     ng-model="repair.imei"
-                    required>
+                    required />
             <div ng-show="editForm.imei.$invalid">
                 <p class="help-block"
                     ng-show="editForm.imei.$error.required" translate="entity.validation.required">
@@ -26,10 +26,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.serialno" for="field_serialno">Serialno</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.serialno" for="field_serialno">Serialno</label>
             <input type="text" class="form-control" name="serialno" id="field_serialno"
                     ng-model="repair.serialno"
-                    required>
+                    required />
             <div ng-show="editForm.serialno.$invalid">
                 <p class="help-block"
                     ng-show="editForm.serialno.$error.required" translate="entity.validation.required">
@@ -38,7 +38,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.brand" for="field_brand">Brand</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.brand" for="field_brand">Brand</label>
             <select class="form-control" name="brand" ng-model="repair.brand" id="field_brand">
                 <option value="Acer" translate="mobilemanagerApp.Brand.Acer">Acer</option>
                 <option value="Alcatel" translate="mobilemanagerApp.Brand.Alcatel">Alcatel</option>
@@ -105,28 +105,30 @@
             </select>
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.entryDate" for="field_entryDate">EntryDate</label>
-            <input type="datetime-local" class="form-control" name="entryDate" id="field_entryDate"
-                    ng-model="repair.entryDate" ng-model-options="{timezone: 'UTC'}"
-                    >
+            <label class="control-label" translate="mobilemanagerApp.repair.entryDate" for="field_entryDate">EntryDate</label>
+            <input id="field_entryDate" type="text" class="form-control" uib-datepicker-popup="{{dateformat}}" ng-model="repair.entryDate" is-open="datePickerForEntryDate.status.opened"
+            />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="datePickerForEntryDateOpen($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.closed" for="field_closed">Closed</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.closed" for="field_closed">Closed</label>
             <input type="checkbox" class="form-control" name="closed" id="field_closed"
                     ng-model="repair.closed"
-                    >
+                     />
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.comment" for="field_comment">Comment</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.comment" for="field_comment">Comment</label>
             <input type="text" class="form-control" name="comment" id="field_comment"
                     ng-model="repair.comment"
-                    >
+                     />
         </div>
         <div class="form-group">
-            <label translate="mobilemanagerApp.repair.price" for="field_price">Price</label>
+            <label class="control-label" translate="mobilemanagerApp.repair.price" for="field_price">Price</label>
             <input type="number" class="form-control" name="price" id="field_price"
                     ng-model="repair.price"
-                    >
+                     />
         </div>
 
         <div class="form-group">
@@ -140,7 +142,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
         </button>
-        <button type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
         </button>
     </div>

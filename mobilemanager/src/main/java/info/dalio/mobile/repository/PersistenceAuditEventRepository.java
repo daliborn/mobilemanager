@@ -1,7 +1,8 @@
 package info.dalio.mobile.repository;
 
 import info.dalio.mobile.domain.PersistentAuditEvent;
-import org.joda.time.LocalDateTime;
+
+import java.time.LocalDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

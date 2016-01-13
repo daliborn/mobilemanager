@@ -16,21 +16,30 @@ import java.util.Objects;
  * A Client.
  */
 @Entity
-@Table(name = "CLIENT")
+@Table(name = "client")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName="client")
+@Document(indexName = "client")
 public class Client implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull        
+    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
-    
+
     @Column(name = "contact_phone")
     private String contactPhone;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "address")
+    private String address;
 
     @OneToMany(mappedBy = "client")
     @JsonIgnore
@@ -61,6 +70,30 @@ public class Client implements Serializable {
         this.contactPhone = contactPhone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public Set<Repair> getRepairs() {
         return repairs;
     }
@@ -77,12 +110,8 @@ public class Client implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Client client = (Client) o;
-
-        if ( ! Objects.equals(id, client.id)) return false;
-
-        return true;
+        return Objects.equals(id, client.id);
     }
 
     @Override
@@ -93,9 +122,12 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
-                ", name='" + name + "'" +
-                ", contactPhone='" + contactPhone + "'" +
-                '}';
+            "id=" + id +
+            ", name='" + name + "'" +
+            ", contactPhone='" + contactPhone + "'" +
+            ", email='" + email + "'" +
+            ", note='" + note + "'" +
+            ", address='" + address + "'" +
+            '}';
     }
 }

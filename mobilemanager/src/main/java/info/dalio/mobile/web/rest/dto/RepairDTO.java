@@ -1,6 +1,6 @@
 package info.dalio.mobile.web.rest.dto;
 
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ public class RepairDTO implements Serializable {
 
     private Brand brand;
 
-    private DateTime entryDate;
+    private ZonedDateTime entryDate;
 
     private Boolean closed;
 
@@ -34,7 +34,6 @@ public class RepairDTO implements Serializable {
     private BigDecimal price;
 
     private Long clientId;
-
     public Long getId() {
         return id;
     }
@@ -67,11 +66,11 @@ public class RepairDTO implements Serializable {
         this.brand = brand;
     }
 
-    public DateTime getEntryDate() {
+    public ZonedDateTime getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(DateTime entryDate) {
+    public void setEntryDate(ZonedDateTime entryDate) {
         this.entryDate = entryDate;
     }
 
@@ -106,7 +105,6 @@ public class RepairDTO implements Serializable {
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -131,14 +129,14 @@ public class RepairDTO implements Serializable {
     @Override
     public String toString() {
         return "RepairDTO{" +
-                "id=" + id +
-                ", imei='" + imei + "'" +
-                ", serialno='" + serialno + "'" +
-                ", brand='" + brand + "'" +
-                ", entryDate='" + entryDate + "'" +
-                ", closed='" + closed + "'" +
-                ", comment='" + comment + "'" +
-                ", price='" + price + "'" +
-                '}';
+            "id=" + id +
+            ", imei='" + imei + "'" +
+            ", serialno='" + serialno + "'" +
+            ", brand='" + brand + "'" +
+            ", entryDate='" + entryDate + "'" +
+            ", closed='" + closed + "'" +
+            ", comment='" + comment + "'" +
+            ", price='" + price + "'" +
+            '}';
     }
 }

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('mobilemanagerApp').controller('RepairDialogController',
-    ['$scope', '$stateParams', '$modalInstance', 'entity', 'Repair', 'Client',
-        function($scope, $stateParams, $modalInstance, entity, Repair, Client) {
+    ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'Repair', 'Client',
+        function($scope, $stateParams, $uibModalInstance, entity, Repair, Client) {
 
         $scope.repair = entity;
         $scope.clients = Client.query();
@@ -12,20 +12,35 @@ angular.module('mobilemanagerApp').controller('RepairDialogController',
             });
         };
 
-        var onSaveFinished = function (result) {
+        var onSaveSuccess = function (result) {
             $scope.$emit('mobilemanagerApp:repairUpdate', result);
-            $modalInstance.close(result);
+            $uibModalInstance.close(result);
+            $scope.isSaving = false;
+        };
+
+        var onSaveError = function (result) {
+            $scope.isSaving = false;
         };
 
         $scope.save = function () {
+            $scope.isSaving = true;
             if ($scope.repair.id != null) {
-                Repair.update($scope.repair, onSaveFinished);
+                Repair.update($scope.repair, onSaveSuccess, onSaveError);
             } else {
-                Repair.save($scope.repair, onSaveFinished);
+                Repair.save($scope.repair, onSaveSuccess, onSaveError);
             }
         };
 
         $scope.clear = function() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
+        };
+        $scope.datePickerForEntryDate = {};
+
+        $scope.datePickerForEntryDate.status = {
+            opened: false
+        };
+
+        $scope.datePickerForEntryDateOpen = function($event) {
+            $scope.datePickerForEntryDate.status.opened = true;
         };
 }]);

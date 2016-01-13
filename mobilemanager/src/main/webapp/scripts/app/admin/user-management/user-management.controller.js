@@ -8,10 +8,11 @@ angular.module('mobilemanagerApp')
             $scope.languages = languages;
         });
 
-        $scope.page = 0;
+        $scope.page = 1;
         $scope.loadAll = function () {
-            User.query({page: $scope.page, per_page: 20}, function (result, headers) {
+            User.query({page: $scope.page - 1, size: 20}, function (result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
+                $scope.totalItems = headers('X-Total-Count');
                 $scope.users = result;
             });
         };
@@ -28,26 +29,6 @@ angular.module('mobilemanagerApp')
                 $scope.loadAll();
                 $scope.clear();
             });
-        };
-
-        $scope.showUpdate = function (login) {
-            User.get({login: login}, function (result) {
-                $scope.user = result;
-                $('#saveUserModal').modal('show');
-            });
-        };
-
-        $scope.save = function () {
-            User.update($scope.user,
-                function () {
-                    $scope.refresh();
-                });
-        };
-
-        $scope.refresh = function () {
-            $scope.loadAll();
-            $('#saveUserModal').modal('hide');
-            $scope.clear();
         };
 
         $scope.clear = function () {

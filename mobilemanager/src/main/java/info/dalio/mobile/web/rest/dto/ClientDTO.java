@@ -19,6 +19,12 @@ public class ClientDTO implements Serializable {
 
     private String contactPhone;
 
+    private String email;
+
+    private String note;
+
+    private String address;
+
     public Long getId() {
         return id;
     }
@@ -41,6 +47,30 @@ public class ClientDTO implements Serializable {
 
     public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override
@@ -67,9 +97,12 @@ public class ClientDTO implements Serializable {
     @Override
     public String toString() {
         return "ClientDTO{" +
-                "id=" + id +
-                ", name='" + name + "'" +
-                ", contactPhone='" + contactPhone + "'" +
-                '}';
+            "id=" + id +
+            ", name='" + name + "'" +
+            ", contactPhone='" + contactPhone + "'" +
+            ", email='" + email + "'" +
+            ", note='" + note + "'" +
+            ", address='" + address + "'" +
+            '}';
     }
 }

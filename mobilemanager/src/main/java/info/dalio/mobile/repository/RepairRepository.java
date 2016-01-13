@@ -1,6 +1,7 @@
 package info.dalio.mobile.repository;
 
 import info.dalio.mobile.domain.Repair;
+
 import org.springframework.data.jpa.repository.*;
 
 import java.util.List;

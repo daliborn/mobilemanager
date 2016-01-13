@@ -1,11 +1,14 @@
 'use strict';
 
 angular.module('mobilemanagerApp')
-    .controller('ClientController', function ($scope, Client, ClientSearch, ParseLinks) {
+    .controller('ClientController', function ($scope, $state, Client, ClientSearch, ParseLinks) {
+
         $scope.clients = [];
+        $scope.predicate = 'id';
+        $scope.reverse = true;
         $scope.page = 0;
         $scope.loadAll = function() {
-            Client.query({page: $scope.page, size: 20}, function(result, headers) {
+            Client.query({page: $scope.page, size: 20, sort: [$scope.predicate + ',' + ($scope.reverse ? 'asc' : 'desc'), 'id']}, function(result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 for (var i = 0; i < result.length; i++) {
                     $scope.clients.push(result[i]);
@@ -23,21 +26,6 @@ angular.module('mobilemanagerApp')
         };
         $scope.loadAll();
 
-        $scope.delete = function (id) {
-            Client.get({id: id}, function(result) {
-                $scope.client = result;
-                $('#deleteClientConfirmation').modal('show');
-            });
-        };
-
-        $scope.confirmDelete = function (id) {
-            Client.delete({id: id},
-                function () {
-                    $scope.reset();
-                    $('#deleteClientConfirmation').modal('hide');
-                    $scope.clear();
-                });
-        };
 
         $scope.search = function () {
             ClientSearch.query({query: $scope.searchQuery}, function(result) {
@@ -55,6 +43,13 @@ angular.module('mobilemanagerApp')
         };
 
         $scope.clear = function () {
-            $scope.client = {name: null, contactPhone: null, id: null};
+            $scope.client = {
+                name: null,
+                contactPhone: null,
+                email: null,
+                note: null,
+                address: null,
+                id: null
+            };
         };
     });

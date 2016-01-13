@@ -20,52 +20,29 @@
         </div>
     </div>
 
-    <div class="modal fade" id="deleteRepairConfirmation">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form name="deleteForm" ng-submit="confirmDelete(repair.id)">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                ng-click="clear()">&times;</button>
-                        <h4 class="modal-title" translate="entity.delete.title">Confirm delete operation</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p translate="mobilemanagerApp.repair.delete.question" translate-values="{id: '{{repair.id}}'}">Are you sure you want to delete this Repair?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
-                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
-                        </button>
-                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete">Delete</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th translate="mobilemanagerApp.repair.imei">Imei</th>
-                    <th translate="mobilemanagerApp.repair.serialno">Serialno</th>
-                    <th translate="mobilemanagerApp.repair.brand">Brand</th>
-                    <th translate="mobilemanagerApp.repair.entryDate">EntryDate</th>
-                    <th translate="mobilemanagerApp.repair.closed">Closed</th>
-                    <th translate="mobilemanagerApp.repair.comment">Comment</th>
-                    <th translate="mobilemanagerApp.repair.price">Price</th>
-                    <th translate="mobilemanagerApp.repair.client">client</th>
+                <tr jh-sort="predicate" ascending="reverse" callback="reset()">
+                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="imei"><span translate="mobilemanagerApp.repair.imei">Imei</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="serialno"><span translate="mobilemanagerApp.repair.serialno">Serialno</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="brand"><span translate="mobilemanagerApp.repair.brand">Brand</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="entryDate"><span translate="mobilemanagerApp.repair.entryDate">EntryDate</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="closed"><span translate="mobilemanagerApp.repair.closed">Closed</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="comment"><span translate="mobilemanagerApp.repair.comment">Comment</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="price"><span translate="mobilemanagerApp.repair.price">Price</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="clientId"><span translate="mobilemanagerApp.repair.client">client</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page">
-                <tr ng-repeat="repair in repairs">
+                <tr ng-repeat="repair in repairs track by repair.id">
+                    <td><a ui-sref="repair.detail({id:repair.id})">{{repair.id}}</a></td>
                     <td>{{repair.imei}}</td>
                     <td>{{repair.serialno}}</td>
                     <td translate="{{'mobilemanagerApp.Brand.' + repair.brand}}">{{repair.brand}}</td>
-                    <td>{{repair.entryDate}}</td>
+                    <td>{{repair.entryDate | date:'medium'}}</td>
                     <td>{{repair.closed}}</td>
                     <td>{{repair.comment}}</td>
                     <td>{{repair.price}}</td>
@@ -84,7 +61,7 @@
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
                         </button>
                         <button type="submit"
-                                ng-click="delete(repair.id)"
+                                ui-sref="repair.delete({id:repair.id})"
                                 class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
                         </button>

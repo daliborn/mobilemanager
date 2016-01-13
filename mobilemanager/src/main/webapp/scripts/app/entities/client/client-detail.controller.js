@@ -8,7 +8,9 @@ angular.module('mobilemanagerApp')
                 $scope.client = result;
             });
         };
-        $rootScope.$on('mobilemanagerApp:clientUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('mobilemanagerApp:clientUpdate', function(event, result) {
             $scope.client = result;
         });
+        $scope.$on('$destroy', unsubscribe);
+
     });
