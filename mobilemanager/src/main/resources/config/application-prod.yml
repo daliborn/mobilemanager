@@ -36,12 +36,16 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-            cluster-nodes: localhost:9300
+            cluster-nodes: http://paas:f1a9d9ac1dd4daa0863cca5da19d2c28@bifur-eu-west-1.searchly.com
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.sendgrid.net
+        port: 587
+        username: ${SENDGRID_USERNAME}
+        password: ${SENDGRID_PASSWORD}
+        protocol: smtp
+        tls: false
+        auth: true
+        from: app@mobilemanager.com
     thymeleaf:
         cache: true
 
